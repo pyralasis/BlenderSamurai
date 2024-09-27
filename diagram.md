@@ -12,68 +12,11 @@
 
     subgraph Entities
       direction TB
-      subgraph #1 Paddle
+      subgraph ???
         direction LR
-        c1_0(Paddle)
-        c1_1(Sprite)
-        c1_2(Transform)
-        c1_3(Collider)
-      end
-      subgraph #2 Ball
-        direction LR
-        c2_0(Ball)
-        c2_1(Sprite)
-        c2_2(Transform)
-        c2_3(Velocity)
-      end
-      subgraph #3 Score
-        direction LR
-        c3_0(Text)
-        c3_1(Style)
-      end
+        c1_0(??)
 
-      subgraph #4 Top-Wall
-        direction LR
-        c4_0(Sprite)
-        c4_1(Transform)
-        c4_2(Collider)
       end
-
-      subgraph #5 Right-Wall
-        direction LR
-        c5_0(Sprite)
-        c5_1(Transform)
-        c5_2(Collider)
-      end
-
-      subgraph #6 Bottom-Wall
-        direction LR
-        c6_0(Sprite)
-        c6_1(Transform)
-        c6_2(Collider)
-      end
-
-      subgraph #7 Left-Wall
-        direction LR
-        c7_0(Sprite)
-        c7_1(Transform)
-        c7_2(Collider)
-      end
-
-      subgraph #8 Brick
-        direction LR
-        c8_0(Brick)
-        c8_1(Sprite)
-        c8_2(Transform)
-        c8_3(Collider)
-      end
-
-      subgraph #...
-        direction LR
-        c9_0(...)
-      end
-
-
     end
   end
 ```
@@ -108,6 +51,25 @@ subgraph Systems
         s5_0(???)
     end
 
+  end
+```
+
+```mermaid
+flowchart LR
+
+subgraph Bundles
+    subgraph BombBundle
+      direction LR
+      b1_0(Bomb)
+      b1_1(Cuttable)
+      b1_2(Velocity)
+    end
+    subgraph FruitBundle
+      direction LR
+      b2_0(Fruit)
+      b2_1(Cuttable)
+      b2_2(Velocity)
+    end
   end
 ```
 
