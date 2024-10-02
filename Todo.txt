@@ -1,0 +1,10 @@
+- Health System
+- Bomb functionality
+- Win State
+- Lose State
+- Time bank
+
+
+- balancing
+- fruit splitting 
+- pi functionality

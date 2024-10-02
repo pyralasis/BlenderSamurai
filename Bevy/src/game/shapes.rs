@@ -1,7 +1,7 @@
 use bevy::{prelude::*, sprite::Mesh2dHandle};
 use enum_iterator::all;
 
-use crate::game::SpawnType;
+use crate::game::spawn::SpawnType;
 
 #[derive(Resource)]
 pub struct CircleResource {

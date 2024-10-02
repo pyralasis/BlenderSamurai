@@ -8,10 +8,20 @@ use super::movement::Velocity;
 pub fn detect_cut() {}
 
 #[derive(Component, Default, Clone, Debug)]
-pub struct Cuttable {}
+pub struct Cuttable {
+    pub radius: f32,
+}
 
-#[derive(Event, Default, Clone, Debug)]
-pub struct CutEvent {}
+#[derive(Event, Clone, Debug)]
+pub struct CutEvent {
+    pub target: Entity,
+}
+
+impl CutEvent {
+    pub fn new(target: Entity) -> Self {
+        Self { target }
+    }
+}
 
 #[derive(Bundle, Default, Clone)]
 pub struct CuttableBundle {
@@ -29,7 +39,7 @@ impl CuttableBundle {
         material: Handle<ColorMaterial>,
     ) -> CuttableBundle {
         CuttableBundle {
-            cuttable: Cuttable {},
+            cuttable: Cuttable { radius },
             sprite: MaterialMesh2dBundle {
                 mesh,
                 material,
@@ -38,5 +48,16 @@ impl CuttableBundle {
             },
             velocity,
         }
+    }
+}
+
+#[derive(Component)]
+pub struct IsCutting {
+    pub enter_position: Vec2,
+}
+
+impl IsCutting {
+    pub fn new(enter_position: Vec2) -> Self {
+        IsCutting { enter_position }
     }
 }
