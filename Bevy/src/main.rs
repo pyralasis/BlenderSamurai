@@ -1,5 +1,4 @@
-use std::time::Duration;
-
+use appstate::{cleanup_main_menu, menu, setup_main_menu, AppStates};
 use bevy::{prelude::*, render::camera::ScalingMode};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use game::{
@@ -9,6 +8,7 @@ use game::{
     spawn_things, GameState, SpawnEvent,
 };
 
+pub mod appstate;
 pub mod game;
 pub mod rng;
 pub mod view;
@@ -16,20 +16,25 @@ pub mod view;
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, WorldInspectorPlugin::new()))
-        .add_event::<SpawnEvent>()
+        .init_state::<AppStates>()
         .add_systems(Startup, setup)
-        .add_systems(Update, (game_loop, move_objects, spawn_things))
-        .insert_resource(GameState {
-            time_till_spawn: Timer::new(Duration::from_secs(1), TimerMode::Repeating),
-        })
+        // Main Menu Stuff
+        .add_systems(OnEnter(AppStates::MainMenu), setup_main_menu)
+        .add_systems(Update, menu.run_if(in_state(AppStates::MainMenu)))
+        .add_systems(OnExit(AppStates::MainMenu), cleanup_main_menu)
+        // Game Stuff
+        .init_resource::<GameState>()
+        .init_resource::<CircleResource>()
+        .add_event::<SpawnEvent>()
+        .add_systems(
+            Update,
+            (game_loop, move_objects, spawn_things).run_if(in_state(AppStates::InGame)),
+        )
+        // Run
         .run();
 }
 
-fn setup(
-    mut commands: Commands,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-    mut meshes: ResMut<Assets<Mesh>>,
-) {
+fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle {
         projection: OrthographicProjection {
             near: -1000.0,
@@ -42,14 +47,4 @@ fn setup(
         },
         ..default()
     });
-
-    commands.insert_resource(CircleResource::create(materials, meshes));
-
-    // commands.spawn((
-    //     SpriteBundle::default(),
-    //     Velocity {
-    //         velocity: Vec2::new(0.0, 40.0),
-    //         gravity_scalar: 1.0,
-    //     },
-    // ));
 }

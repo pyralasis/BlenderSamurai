@@ -25,6 +25,14 @@ pub struct GameState {
     pub time_till_spawn: Timer,
 }
 
+impl Default for GameState {
+    fn default() -> Self {
+        Self {
+            time_till_spawn: Timer::new(Duration::from_secs(1), TimerMode::Repeating),
+        }
+    }
+}
+
 pub fn game_loop(
     mut state: ResMut<GameState>,
     time: Res<Time>,

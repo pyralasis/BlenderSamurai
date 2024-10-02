@@ -10,23 +10,24 @@ pub struct CircleResource {
 }
 
 impl CircleResource {
-    pub fn create(
-        mut materials: ResMut<Assets<ColorMaterial>>,
-        mut meshes: ResMut<Assets<Mesh>>,
-    ) -> CircleResource {
+    pub fn get_spawn_material(&self, spawn_type: &SpawnType) -> Handle<ColorMaterial> {
+        let index = *spawn_type as usize;
+        return self.colors[index].clone();
+    }
+}
+
+impl FromWorld for CircleResource {
+    fn from_world(world: &mut World) -> Self {
+        let mut materials = world.resource_mut::<Assets<ColorMaterial>>();
         let mut colors = Vec::new();
         for spawn_type in all::<SpawnType>() {
             colors.push(materials.add(spawn_type.color()));
         }
 
+        let mut meshes = world.resource_mut::<Assets<Mesh>>();
         CircleResource {
             mesh: Mesh2dHandle(meshes.add(Circle::new(1.0))),
             colors,
         }
-    }
-
-    pub fn get_spawn_material(&self, spawn_type: &SpawnType) -> Handle<ColorMaterial> {
-        let index = *spawn_type as usize;
-        return self.colors[index].clone();
     }
 }
