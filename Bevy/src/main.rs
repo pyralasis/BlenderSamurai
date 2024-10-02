@@ -5,7 +5,9 @@ use game::{
     game_loop,
     movement::{move_objects, Velocity},
     shapes::CircleResource,
-    spawn_things, GameState, SpawnEvent,
+    spawn_things,
+    sword::{sword_position, Sword},
+    GameState, SpawnEvent,
 };
 
 pub mod appstate;
@@ -25,10 +27,12 @@ fn main() {
         // Game Stuff
         .init_resource::<GameState>()
         .init_resource::<CircleResource>()
+        .init_resource::<Sword>()
         .add_event::<SpawnEvent>()
         .add_systems(
             Update,
-            (game_loop, move_objects, spawn_things).run_if(in_state(AppStates::InGame)),
+            (game_loop, move_objects, spawn_things, sword_position)
+                .run_if(in_state(AppStates::InGame)),
         )
         // Run
         .run();

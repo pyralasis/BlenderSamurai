@@ -19,6 +19,7 @@ pub mod cut;
 pub mod fruit;
 pub mod movement;
 pub mod shapes;
+pub mod sword;
 
 #[derive(Resource)]
 pub struct GameState {
