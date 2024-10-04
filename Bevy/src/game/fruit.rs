@@ -1,13 +1,6 @@
-use bevy::{
-    prelude::*,
-    sprite::{MaterialMesh2dBundle, Mesh2dHandle},
-};
+use bevy::prelude::*;
 
-use super::{
-    cut::{CutEvent, Cuttable},
-    movement::Velocity,
-    GameState,
-};
+use super::{cut::CutEvent, GameState};
 
 pub fn on_fruit_cut(
     mut commands: Commands,

@@ -1,7 +1,6 @@
 use bevy::{
     prelude::*,
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
-    transform::commands,
 };
 
 use super::movement::Velocity;

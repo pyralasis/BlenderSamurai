@@ -1,4 +1,4 @@
-use bevy::{asset::transformer, ecs::reflect, prelude::*, window::PrimaryWindow};
+use bevy::{prelude::*, window::PrimaryWindow};
 
 use super::cut::{CutEvent, Cuttable, IsCutting};
 
@@ -63,6 +63,7 @@ pub fn check_for_end_cut(
             if is_cutting.enter_position.distance(local_sword_position)
                 > (cuttable.radius * 2.0 * 0.7)
             {
+                #[cfg(debug_assertions)]
                 info!("YOU ARE A TRUE BLENDER SAMURAI");
                 cut_event.send(CutEvent::new(entity, cuttable.clone()));
             } else {

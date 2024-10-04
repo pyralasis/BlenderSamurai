@@ -1,61 +1,21 @@
-use appstate::{cleanup_main_menu, menu, setup_main_menu, AppStates};
+use appstate::AppStates;
 use bevy::{prelude::*, render::camera::ScalingMode};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
-use game::{
-    bomb::{on_bomb_cut, CutBombEvent},
-    cut::{check_despawn, CutEvent},
-    fruit::on_fruit_cut,
-    game_loop,
-    life::{setup_lives, update_lives, LifeCounter},
-    movement::move_objects,
-    shapes::CircleResource,
-    spawn::{spawn_things, SpawnEvent},
-    sword::{check_for_end_cut, check_for_start_cut, sword_position, Sword},
-    timers::setup_timers,
-    GameState,
-};
+use plugins::GamePlugins;
 
 pub mod appstate;
+pub mod custom_ui;
 pub mod game;
+pub mod menu;
+pub mod plugins;
 pub mod rng;
 pub mod view;
 
 fn main() {
     App::new()
-        .add_plugins((DefaultPlugins, WorldInspectorPlugin::new()))
-        .register_type::<Sword>()
-        .register_type::<GameState>()
+        .add_plugins((DefaultPlugins, WorldInspectorPlugin::new(), GamePlugins))
         .init_state::<AppStates>()
         .add_systems(Startup, setup)
-        // Main Menu Stuff
-        .add_systems(OnEnter(AppStates::MainMenu), setup_main_menu)
-        .add_systems(Update, menu.run_if(in_state(AppStates::MainMenu)))
-        .add_systems(OnExit(AppStates::MainMenu), cleanup_main_menu)
-        // Game Stuff
-        .init_resource::<GameState>()
-        .init_resource::<CircleResource>()
-        .init_resource::<Sword>()
-        .add_event::<SpawnEvent>()
-        .add_event::<CutEvent>()
-        .add_event::<CutBombEvent>()
-        .add_systems(OnEnter(AppStates::InGame), (setup_lives, setup_timers))
-        .add_systems(
-            Update,
-            (
-                game_loop,
-                move_objects,
-                spawn_things,
-                sword_position,
-                check_for_start_cut,
-                check_for_end_cut,
-                on_fruit_cut,
-                on_bomb_cut,
-                update_lives,
-                check_despawn,
-            )
-                .run_if(in_state(AppStates::InGame)),
-        )
-        // Run
         .run();
 }
 

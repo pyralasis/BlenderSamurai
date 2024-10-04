@@ -1,8 +1,6 @@
-use bevy::{prelude::*, utils::info};
+use bevy::prelude::*;
 
-use crate::game;
-
-use super::{bomb::CutBombEvent, shapes::CircleResource, GameState};
+use super::{bomb::CutBombEvent, GameState};
 
 #[derive(Event, Debug)]
 pub struct HitBomb;
@@ -37,6 +35,6 @@ pub fn update_lives(
 ) {
     for evt in cut_bomb_event.read() {
         let mut counter = life_counter.single_mut();
-        counter.sections[0] = game_state.lives.to_string().into();
+        counter.sections[0].value = game_state.lives.to_string().into();
     }
 }
