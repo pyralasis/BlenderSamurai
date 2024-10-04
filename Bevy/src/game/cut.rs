@@ -1,6 +1,7 @@
 use bevy::{
     prelude::*,
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
+    transform::commands,
 };
 
 use super::movement::Velocity;
@@ -10,16 +11,18 @@ pub fn detect_cut() {}
 #[derive(Component, Default, Clone, Debug)]
 pub struct Cuttable {
     pub radius: f32,
+    pub time_score: f32,
 }
 
 #[derive(Event, Clone, Debug)]
 pub struct CutEvent {
     pub target: Entity,
+    pub cuttable: Cuttable,
 }
 
 impl CutEvent {
-    pub fn new(target: Entity) -> Self {
-        Self { target }
+    pub fn new(target: Entity, cuttable: Cuttable) -> Self {
+        Self { target, cuttable }
     }
 }
 
@@ -37,9 +40,10 @@ impl CuttableBundle {
         radius: f32,
         mesh: Mesh2dHandle,
         material: Handle<ColorMaterial>,
+        time_score: f32,
     ) -> CuttableBundle {
         CuttableBundle {
-            cuttable: Cuttable { radius },
+            cuttable: Cuttable { radius, time_score },
             sprite: MaterialMesh2dBundle {
                 mesh,
                 material,
@@ -59,5 +63,13 @@ pub struct IsCutting {
 impl IsCutting {
     pub fn new(enter_position: Vec2) -> Self {
         IsCutting { enter_position }
+    }
+}
+
+pub fn check_despawn(mut commands: Commands, cuttables: Query<(&mut Transform, Entity)>) {
+    for (transform, entity) in cuttables.iter() {
+        if transform.translation.y < -50.0 {
+            commands.entity(entity).despawn();
+        }
     }
 }

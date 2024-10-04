@@ -64,7 +64,7 @@ pub fn check_for_end_cut(
                 > (cuttable.radius * 2.0 * 0.7)
             {
                 info!("YOU ARE A TRUE BLENDER SAMURAI");
-                cut_event.send(CutEvent::new(entity));
+                cut_event.send(CutEvent::new(entity, cuttable.clone()));
             } else {
                 commands.entity(entity).remove::<IsCutting>();
             }

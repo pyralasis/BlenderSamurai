@@ -3,7 +3,7 @@ use bevy::{prelude::*, render::camera::ScalingMode};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use game::{
     bomb::{on_bomb_cut, CutBombEvent},
-    cut::CutEvent,
+    cut::{check_despawn, CutEvent},
     fruit::on_fruit_cut,
     game_loop,
     life::{setup_lives, update_lives, LifeCounter},
@@ -11,6 +11,7 @@ use game::{
     shapes::CircleResource,
     spawn::{spawn_things, SpawnEvent},
     sword::{check_for_end_cut, check_for_start_cut, sword_position, Sword},
+    timers::setup_timers,
     GameState,
 };
 
@@ -37,7 +38,7 @@ fn main() {
         .add_event::<SpawnEvent>()
         .add_event::<CutEvent>()
         .add_event::<CutBombEvent>()
-        .add_systems(OnEnter(AppStates::InGame), setup_lives)
+        .add_systems(OnEnter(AppStates::InGame), (setup_lives, setup_timers))
         .add_systems(
             Update,
             (
@@ -50,6 +51,7 @@ fn main() {
                 on_fruit_cut,
                 on_bomb_cut,
                 update_lives,
+                check_despawn,
             )
                 .run_if(in_state(AppStates::InGame)),
         )

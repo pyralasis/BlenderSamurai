@@ -83,6 +83,16 @@ impl SpawnType {
         }
     }
 
+    pub fn time_score(&self) -> f32 {
+        match self {
+            SpawnType::Bomb => 0.0,
+            SpawnType::Watermelon => 0.2,
+            SpawnType::Apple => 0.5,
+            SpawnType::Orange => 0.5,
+            SpawnType::Grape => 1.0,
+        }
+    }
+
     pub fn weight(&self) -> f32 {
         match self {
             SpawnType::Bomb => 10.0,
@@ -124,6 +134,7 @@ impl SpawnType {
             self.radius(),
             mesh,
             material,
+            self.time_score(),
         ));
 
         match self {
