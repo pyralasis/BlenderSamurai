@@ -30,10 +30,10 @@ pub fn setup_lives(mut commands: Commands, game_state: Res<GameState>) {
 
 pub fn update_lives(
     mut life_counter: Query<&mut Text, With<LifeCounter>>,
-    mut game_state: ResMut<GameState>,
+    game_state: ResMut<GameState>,
     mut cut_bomb_event: EventReader<CutBombEvent>,
 ) {
-    for evt in cut_bomb_event.read() {
+    for _evt in cut_bomb_event.read() {
         let mut counter = life_counter.single_mut();
         counter.sections[0].value = game_state.lives.to_string().into();
     }

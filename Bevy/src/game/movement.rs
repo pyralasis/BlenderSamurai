@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-pub const BASE_GRAVITY: f32 = -250.0;
+pub const BASE_GRAVITY: f32 = -400.0;
 
 #[derive(Component, Default, Clone, Debug)]
 pub struct Velocity {

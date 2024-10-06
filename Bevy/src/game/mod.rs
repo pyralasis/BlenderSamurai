@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use bevy::{prelude::*, utils::info};
-use bomb::{on_bomb_cut, CutBombEvent};
+use bomb::{explode_on_bomb_cut, on_bomb_cut, CutBombEvent};
 use cut::{check_despawn, CutEvent};
 use fruit::on_fruit_cut;
 use life::{setup_lives, update_lives};
@@ -50,6 +50,7 @@ impl Plugin for GameLoopPlugin {
                     update_lives,
                     check_despawn,
                     update_timers,
+                    explode_on_bomb_cut,
                 )
                     .run_if(in_state(AppStates::InGame)),
             );
@@ -90,9 +91,10 @@ impl GameState {
             "AAAA{:?}",
             Duration::from_secs_f32(self.blend_time.remaining_secs() + additional_time,)
         );
-        self.blend_time.set_duration(Duration::from_secs_f32(
+        self.blend_time = Timer::from_seconds(
             self.blend_time.remaining_secs() + additional_time,
-        ));
+            TimerMode::Once,
+        );
     }
 
     pub fn reset_blend_time(&mut self) {
@@ -110,7 +112,7 @@ pub fn game_loop(
         spawn.send(SpawnEvent::new(rand::random::<SpawnType>()));
         state
             .time_till_spawn
-            .set_duration(Duration::from_secs_f32(Random::between(1.0, 2.0)));
+            .set_duration(Duration::from_secs_f32(Random::between(0.4, 0.6)));
     }
 
     if state.blend_time.remaining().as_millis() > 0 {
