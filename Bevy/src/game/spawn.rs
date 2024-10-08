@@ -1,6 +1,6 @@
 use std::usize;
 
-use super::cut::CuttableBundle;
+use super::cut::{Cuttable, CuttableBundle};
 use super::fruit::Fruit;
 use super::movement::Velocity;
 use super::shapes::CircleResource;
@@ -49,6 +49,23 @@ pub fn spawn_things(
             &shapes,
         );
         // new_y = init_y + gravity * time
+    }
+}
+
+pub fn check_despawn(
+    mut commands: Commands,
+    cuttables: Query<(&mut Transform, Entity), With<Cuttable>>,
+) {
+    for (transform, entity) in cuttables.iter() {
+        if transform.translation.y < -50.0 {
+            commands.entity(entity).despawn();
+        }
+    }
+}
+
+pub fn cleanup_despawn(mut commands: Commands, cuttables: Query<Entity, With<Cuttable>>) {
+    for entity in cuttables.iter() {
+        commands.entity(entity).despawn();
     }
 }
 

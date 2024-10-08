@@ -2,22 +2,13 @@ use bevy::prelude::*;
 
 use super::{bomb::CutBombEvent, GameState};
 
-#[derive(Event, Debug)]
-pub struct HitBomb;
-
 #[derive(Component, Debug)]
 pub struct LifeCounter;
 
-#[derive(Bundle, Debug)]
-pub struct LifeCounterBundle {
-    life_counter: LifeCounter,
-    text: TextBundle,
-}
-
 pub fn setup_lives(mut commands: Commands, game_state: Res<GameState>) {
-    commands.spawn(LifeCounterBundle {
-        life_counter: LifeCounter,
-        text: TextBundle::from_section(
+    commands.spawn((
+        LifeCounter,
+        TextBundle::from_section(
             game_state.lives.to_string(), // format!("{}", game_state.lives)
             TextStyle {
                 font_size: 40.0,
@@ -25,7 +16,7 @@ pub fn setup_lives(mut commands: Commands, game_state: Res<GameState>) {
                 ..default()
             },
         ),
-    });
+    ));
 }
 
 pub fn update_lives(
@@ -36,5 +27,11 @@ pub fn update_lives(
     for _evt in cut_bomb_event.read() {
         let mut counter = life_counter.single_mut();
         counter.sections[0].value = game_state.lives.to_string().into();
+    }
+}
+
+pub fn cleanup_lives(mut commands: Commands, life_counter: Query<Entity, With<LifeCounter>>) {
+    for entity in life_counter.iter() {
+        commands.entity(entity).despawn_recursive();
     }
 }

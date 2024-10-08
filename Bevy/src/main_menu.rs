@@ -14,11 +14,11 @@ impl Plugin for MainMenuPlugin {
 }
 
 #[derive(Resource)]
-pub struct MenuData {
+struct MenuData {
     menu_container: Entity,
 }
 
-pub fn setup_main_menu(mut commands: Commands) {
+fn setup_main_menu(mut commands: Commands) {
     let menu_container = commands
         .spawn(NodeBundle {
             style: Style {
@@ -72,8 +72,10 @@ pub fn setup_main_menu(mut commands: Commands) {
         .set_parent(menu_container);
 }
 
-pub fn cleanup_main_menu(mut commands: Commands, menu_data: Res<MenuData>) {
+fn cleanup_main_menu(mut commands: Commands, menu_data: Res<MenuData>) {
     commands
         .entity(menu_data.menu_container)
         .despawn_recursive();
+
+    commands.remove_resource::<MenuData>();
 }

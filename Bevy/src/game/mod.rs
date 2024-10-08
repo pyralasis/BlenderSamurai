@@ -1,15 +1,15 @@
 use std::time::Duration;
 
-use bevy::{prelude::*, utils::info};
+use bevy::prelude::*;
 use bomb::{explode_on_bomb_cut, on_bomb_cut, CutBombEvent};
-use cut::{check_despawn, CutEvent};
+use cut::CutEvent;
 use fruit::on_fruit_cut;
-use life::{setup_lives, update_lives};
+use life::{cleanup_lives, setup_lives, update_lives};
 use movement::move_objects;
 use shapes::CircleResource;
-use spawn::{spawn_things, SpawnEvent, SpawnType};
+use spawn::{check_despawn, cleanup_despawn, spawn_things, SpawnEvent, SpawnType};
 use sword::{check_for_end_cut, check_for_start_cut, sword_position, Sword};
-use timers::{setup_timers, update_timers};
+use timers::{cleanup_timers, setup_timers, update_timers};
 
 use crate::{appstate::AppStates, rng::Random};
 
@@ -53,6 +53,10 @@ impl Plugin for GameLoopPlugin {
                     explode_on_bomb_cut,
                 )
                     .run_if(in_state(AppStates::InGame)),
+            )
+            .add_systems(
+                OnExit(AppStates::InGame),
+                (cleanup_lives, cleanup_timers, cleanup_despawn),
             );
     }
 }
@@ -106,6 +110,7 @@ pub fn game_loop(
     mut state: ResMut<GameState>,
     time: Res<Time>,
     mut spawn: EventWriter<SpawnEvent>,
+    mut next_state: ResMut<NextState<AppStates>>,
 ) {
     state.time_till_spawn.tick(time.delta());
     if state.time_till_spawn.finished() {
@@ -119,5 +124,9 @@ pub fn game_loop(
         // info!("{}", state.blend_time.remaining().as_millis().to_string());
         state.blend_time.tick(time.delta());
         state.total_game_time.tick(time.delta());
+    }
+
+    if state.total_game_time.finished() {
+        next_state.set(AppStates::ResultMenu);
     }
 }

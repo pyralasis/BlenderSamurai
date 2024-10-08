@@ -5,6 +5,5 @@ pub enum AppStates {
     #[default]
     MainMenu,
     InGame,
-    LostGame,
-    WonGame,
+    ResultMenu,
 }

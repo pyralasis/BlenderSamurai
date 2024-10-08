@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{custom_ui::CustomUIPlugin, game::GameLoopPlugin, menu::MainMenuPlugin};
+use crate::{
+    custom_ui::CustomUIPlugin, game::GameLoopPlugin, main_menu::MainMenuPlugin,
+    result_menu::ResultMenuPlugin,
+};
 
 pub struct GamePlugins;
 impl Plugin for GamePlugins {
@@ -8,23 +11,8 @@ impl Plugin for GamePlugins {
         app.add_plugins((
             MainMenuPlugin,
             GameLoopPlugin,
-            LostGamePlugin,
-            WonGamePlugin,
+            ResultMenuPlugin,
             CustomUIPlugin,
         ));
-    }
-}
-
-struct LostGamePlugin;
-impl Plugin for LostGamePlugin {
-    fn build(&self, _app: &mut App) {
-        //todo!()
-    }
-}
-
-struct WonGamePlugin;
-impl Plugin for WonGamePlugin {
-    fn build(&self, _app: &mut App) {
-        //todo!()
     }
 }

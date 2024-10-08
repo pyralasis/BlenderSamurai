@@ -5,8 +5,6 @@ use bevy::{
 
 use super::movement::Velocity;
 
-pub fn detect_cut() {}
-
 #[derive(Component, Default, Clone, Debug)]
 pub struct Cuttable {
     pub radius: f32,
@@ -62,13 +60,5 @@ pub struct IsCutting {
 impl IsCutting {
     pub fn new(enter_position: Vec2) -> Self {
         IsCutting { enter_position }
-    }
-}
-
-pub fn check_despawn(mut commands: Commands, cuttables: Query<(&mut Transform, Entity)>) {
-    for (transform, entity) in cuttables.iter() {
-        if transform.translation.y < -50.0 {
-            commands.entity(entity).despawn();
-        }
     }
 }

@@ -8,14 +8,6 @@ pub struct BlendTimeTimer;
 #[derive(Component, Debug)]
 pub struct TotalTimeTimer;
 
-fn timer_style() -> TextStyle {
-    TextStyle {
-        font_size: 40.0,
-        color: Color::srgb(0.9, 0.9, 0.9),
-        ..default()
-    }
-}
-
 pub fn setup_timers(mut commands: Commands, game_state: Res<GameState>) {
     let timer_container = commands
         .spawn(NodeBundle {
@@ -86,4 +78,18 @@ pub fn update_timers(
 
     let mut blend_text = blend.single_mut();
     blend_text.sections[0].value = timer_to_str(&game_state.blend_time);
+}
+
+pub fn cleanup_timers(
+    mut commands: Commands,
+    total: Query<Entity, (With<TotalTimeTimer>, Without<BlendTimeTimer>)>,
+    blend: Query<Entity, (With<BlendTimeTimer>, Without<TotalTimeTimer>)>,
+) {
+    for entity in total.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
+
+    for entity in blend.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
 }

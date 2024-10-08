@@ -1,4 +1,6 @@
-use bevy::{asset::transformer, prelude::*};
+use bevy::prelude::*;
+
+use crate::appstate::AppStates;
 
 use super::{cut::CutEvent, movement::Velocity, GameState};
 
@@ -11,11 +13,17 @@ pub fn on_bomb_cut(
     bombs: Query<&Transform, With<Bomb>>,
     mut game_state: ResMut<GameState>,
     mut cut_bomb_event: EventWriter<CutBombEvent>,
+    mut next_state: ResMut<NextState<AppStates>>,
 ) {
     for evt in cut_event.read() {
         if let Ok(bomb_transform) = bombs.get(evt.target) {
             game_state.decrement_lives();
             commands.entity(evt.target).despawn();
+
+            if game_state.lives <= 0 {
+                next_state.set(AppStates::ResultMenu);
+            }
+
             cut_bomb_event.send(CutBombEvent(bomb_transform.translation.xy()));
         }
     }

@@ -6,8 +6,9 @@ use plugins::GamePlugins;
 pub mod appstate;
 pub mod custom_ui;
 pub mod game;
-pub mod menu;
+pub mod main_menu;
 pub mod plugins;
+pub mod result_menu;
 pub mod rng;
 pub mod view;
 
